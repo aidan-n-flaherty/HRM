@@ -31,6 +31,7 @@ class HierarchicalReasoningModel_ACTV1Carry:
 class HierarchicalReasoningModel_ACTV1Config(BaseModel):
     batch_size: int
     seq_len: int
+    dim: int
     puzzle_emb_ndim: int = 0
     num_puzzle_identifiers: int
     hidden_size: int
@@ -100,6 +101,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
         self.embed_scale = math.sqrt(self.config.hidden_size)
         embed_init_std = 1.0 / self.embed_scale
 
+        self.input_proj = nn.Linear(self.config.dim, self.config.hidden_size, bias=False)
         self.q_head = CastedLinear(self.config.hidden_size, 2, bias=True)
 
         self.puzzle_emb_len = -(self.config.puzzle_emb_ndim // -self.config.hidden_size)
@@ -127,7 +129,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
             self.q_head.bias.fill_(-5)
 
     def _input_embeddings(self, input: torch.Tensor, puzzle_identifiers: torch.Tensor):
-        embedding = input.to(self.forward_dtype)
+        embedding = self.input_proj(input.to(self.input_proj.weight.dtype)).to(self.forward_dtype)
 
         if self.config.puzzle_emb_ndim > 0:
             puzzle_embedding = self.puzzle_emb(puzzle_identifiers)

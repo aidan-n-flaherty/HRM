@@ -14,7 +14,7 @@ class PuzzleDatasetMetadata(pydantic.BaseModel):
     ignore_label_id: Optional[int]
     blank_identifier_id: int
     
-    vocab_size: int
+    dim: int
     seq_len: int
     num_puzzle_identifiers: int
     

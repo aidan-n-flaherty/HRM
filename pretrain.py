@@ -92,6 +92,7 @@ def create_model(config: PretrainConfig, train_metadata: PuzzleDatasetMetadata, 
         **config.arch.__pydantic_extra__,  # type: ignore
         batch_size=config.global_batch_size // world_size,
         seq_len=train_metadata.seq_len,
+        dim=train_metadata.dim,
         num_puzzle_identifiers=train_metadata.num_puzzle_identifiers,
         causal=False,
     )
