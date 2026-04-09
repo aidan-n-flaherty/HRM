@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from torch import nn
 
 
+IGNORE_LABEL_ID = -100
 PREDICT_TOKEN_IDS = [1, 2]
 
 
