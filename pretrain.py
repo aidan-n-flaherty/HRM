@@ -14,7 +14,7 @@ import coolname
 import hydra
 import pydantic
 from omegaconf import DictConfig
-from adam_atan2_pytorch import AdamATan2
+from adam_atan2_pytorch import AdamAtan2
 from puzzle_dataset import PuzzleDataset, PuzzleDatasetConfig, PuzzleDatasetMetadata
 from utils.functions import load_model_class, get_model_source_path
 from models.sparse_embedding import CastedSparseEmbeddingSignSGD_Distributed
@@ -126,7 +126,7 @@ def create_model(config: PretrainConfig, train_metadata: PuzzleDatasetMetadata, 
                 weight_decay=config.puzzle_emb_weight_decay,
                 world_size=world_size
             ),
-            AdamATan2(
+            AdamAtan2(
                 model.parameters(),
                 lr=1e-10,
                 weight_decay=config.weight_decay,
@@ -136,7 +136,7 @@ def create_model(config: PretrainConfig, train_metadata: PuzzleDatasetMetadata, 
         optimizer_lrs = [config.puzzle_emb_lr, config.lr]
     else:
         optimizers = [
-            AdamATan2(
+            AdamAtan2(
                 model.parameters(),
                 lr=1e-10,
                 weight_decay=config.weight_decay,
