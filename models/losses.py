@@ -29,7 +29,7 @@ class ContinuousACTLossHead(nn.Module):
         preds = self.output_proj(outputs["hidden_states"])
 
         predict_mask = torch.zeros(preds.shape[1], dtype=torch.bool, device=preds.device)
-        for idx in PREDICT_TOKEN_IDS:
+        for idx in range(predict_mask.shape[0]/4, predict_mask.shape[0]*3/4):
             predict_mask[idx] = True
 
         diff = (preds[:, predict_mask] - labels[:, predict_mask].to(preds.dtype)) ** 2

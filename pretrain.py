@@ -102,7 +102,7 @@ def create_model(config: PretrainConfig, train_metadata: PuzzleDatasetMetadata, 
 
     with torch.device("cuda"):
         model: nn.Module = model_cls(model_cfg)
-        model = loss_head_cls(model, **config.arch.loss.__pydantic_extra__)  # type: ignore
+        model = loss_head_cls(model, config.arch.hidden_size, train_metadata.dim, **config.arch.loss.__pydantic_extra__)  # type: ignore
 
     if "DISABLE_COMPILE" not in os.environ:
         model = torch.compile(model, dynamic=False)  # type: ignore
