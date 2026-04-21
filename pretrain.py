@@ -97,7 +97,9 @@ def create_model(config: PretrainConfig, train_metadata: PuzzleDatasetMetadata, 
         causal=False,
     )
 
-    model_cls = load_model_class(config.arch.name)
+    from models.hrm.hrm_act_v1 import HierarchicalReasoningModel_ACTV1
+    #model_cls = load_model_class(config.arch.name)
+    model_cls = HierarchicalReasoningModel_ACTV1
     loss_head_cls = load_model_class(config.arch.loss.name)
 
     with torch.device("cuda"):
