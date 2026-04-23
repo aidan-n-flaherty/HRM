@@ -94,7 +94,7 @@ class PuzzleDataset(IterableDataset):
 
     def _collate_batch(self, batch):
         # Convert dtype
-        batch = {k: v for k, v in batch.items()}
+        # batch = {k: v for k, v in batch.items()}
 
         # Convert ignore label IDs
         #if self.metadata.ignore_label_id is not None:
