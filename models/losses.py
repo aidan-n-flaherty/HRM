@@ -24,9 +24,6 @@ class ContinuousACTLossHead(nn.Module):
     ) -> Tuple[Any, torch.Tensor, Dict[str, torch.Tensor], Optional[Dict[str, torch.Tensor]], torch.Tensor]:
         new_carry, outputs = self.model(**model_kwargs)
 
-        print("input shape:", new_carry.current_data["inputs"].shape)
-        print("label shape:", new_carry.current_data["labels"].shape)
-
         labels = new_carry.current_data["labels"]
 
         preds = self.output_proj(outputs["hidden_states"])
