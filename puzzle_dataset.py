@@ -102,7 +102,7 @@ class PuzzleDataset(IterableDataset):
 
         # Pad
         if batch["puzzle_identifiers"].size < self.local_batch_size:
-            print("Padding!")
+            print("Padding!", flush=True)
             pad_size = self.local_batch_size - batch["puzzle_identifiers"].size
 
             pad_values = {
@@ -111,6 +111,8 @@ class PuzzleDataset(IterableDataset):
                 "puzzle_identifiers": self.metadata.blank_identifier_id
             }
             batch = {k: np.pad(v, ((0, pad_size), ) + ((0, 0), ) * (v.ndim - 1), constant_values=pad_values[k]) for k, v in batch.items()}
+        else:
+            print("Not padding!", flush=True)
 
         # To tensor
         return {k: torch.from_numpy(v) for k, v in batch.items()}
