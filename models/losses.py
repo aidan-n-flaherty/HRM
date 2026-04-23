@@ -12,9 +12,6 @@ class ContinuousACTLossHead(nn.Module):
     def __init__(self, model: nn.Module, dim: int, hidden_size: int):
         super().__init__()
         self.model = model
-        self.output_proj = nn.Linear(hidden_size, dim, bias=False).to(
-            getattr(torch, model.config.forward_dtype)
-        )
 
     def initial_carry(self, batch, **kwargs):
         return self.model.initial_carry(batch, **kwargs)  # type: ignore
@@ -28,7 +25,7 @@ class ContinuousACTLossHead(nn.Module):
 
         labels = new_carry.current_data["labels"]
 
-        preds = self.output_proj(outputs["hidden_states"])
+        preds = outputs["hidden_states"]
 
         predict_mask = torch.zeros(preds.shape[1], dtype=torch.bool, device=preds.device)
         for idx in range(int(predict_mask.shape[0]/4), int(predict_mask.shape[0]*3/4)):
