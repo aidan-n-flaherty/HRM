@@ -12,7 +12,9 @@ class ContinuousACTLossHead(nn.Module):
     def __init__(self, model: nn.Module, dim: int, hidden_size: int):
         super().__init__()
         self.model = model
-        self.output_proj = nn.Linear(hidden_size, dim, bias=False)
+        self.output_proj = nn.Linear(hidden_size, dim, bias=False).to(
+            getattr(torch, model.config.forward_dtype)
+        )
 
     def initial_carry(self, batch, **kwargs):
         return self.model.initial_carry(batch, **kwargs)  # type: ignore

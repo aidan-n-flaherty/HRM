@@ -96,10 +96,6 @@ class PuzzleDataset(IterableDataset):
         # Convert dtype
         batch = {k: v for k, v in batch.items()}
 
-        # Convert ignore label IDs
-        if self.metadata.ignore_label_id is not None:
-            batch["labels"][batch["labels"] == self.metadata.ignore_label_id] = IGNORE_LABEL_ID
-
         # Pad
         if batch["puzzle_identifiers"].size < self.local_batch_size:
             pad_size = self.local_batch_size - batch["puzzle_identifiers"].size
