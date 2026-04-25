@@ -100,9 +100,9 @@ class PuzzleDataset(IterableDataset):
         #if self.metadata.ignore_label_id is not None:
         #    batch["labels"][batch["labels"] == self.metadata.ignore_label_id] = IGNORE_LABEL_ID
 
-        print(len(batch.items()), flush=True)
+        print(len(batch.items()), flush=True, file=sys.stderr)
         for k, v in batch.items():
-            print(k, v.shape, flush=True)
+            print(k, v.shape, flush=True, file=sys.stderr)
         
         # Pad
         import sys
