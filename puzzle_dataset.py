@@ -115,6 +115,7 @@ class PuzzleDataset(IterableDataset):
         else:
             print("Not padding!", flush=True, file=sys.stderr)
         
+        print(len(batch.items()))
         for k, v in batch.items():
             print(k, v.shape)
 
