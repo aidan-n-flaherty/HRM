@@ -174,9 +174,6 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
                 if not (_H_step == self.config.H_cycles - 1):
                     z_H = self.H_level(z_H, z_L, **seq_info)
 
-        z_H = z_H.detach()
-        z_L = z_L.detach()
-
         assert not z_H.requires_grad and not z_L.requires_grad
 
         z_L = self.L_level(z_L, z_H + input_embeddings, **seq_info)
