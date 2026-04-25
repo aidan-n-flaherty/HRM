@@ -114,6 +114,9 @@ class PuzzleDataset(IterableDataset):
             batch = {k: np.pad(v, ((0, pad_size), ) + ((0, 0), ) * (v.ndim - 1), constant_values=pad_values[k]) for k, v in batch.items()}
         else:
             print("Not padding!", flush=True, file=sys.stderr)
+        
+        for k, v in batch.items():
+            print(k, v.shape)
 
         # To tensor
         return {k: torch.from_numpy(v) for k, v in batch.items()}
