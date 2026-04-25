@@ -58,7 +58,7 @@ class ContinuousACTLossHead(nn.Module):
             "q_halt_loss": q_halt_loss.detach(),
         })
 
-        q_continue_loss = torch.zeros(1, device=preds.device, dtype=preds.dtype)
+        q_continue_loss = 0
         if "target_q_continue" in outputs:
             q_continue_loss = F.binary_cross_entropy_with_logits(
                 outputs["q_continue_logits"],
