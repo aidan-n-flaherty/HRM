@@ -100,6 +100,10 @@ class PuzzleDataset(IterableDataset):
         #if self.metadata.ignore_label_id is not None:
         #    batch["labels"][batch["labels"] == self.metadata.ignore_label_id] = IGNORE_LABEL_ID
 
+        print(len(batch.items()), flush=True)
+        for k, v in batch.items():
+            print(k, v.shape, flush=True)
+        
         # Pad
         import sys
         if batch["puzzle_identifiers"].size < self.local_batch_size:
@@ -115,10 +119,6 @@ class PuzzleDataset(IterableDataset):
         else:
             print("Not padding!", flush=True, file=sys.stderr)
         
-        print(len(batch.items()), flush=True)
-        for k, v in batch.items():
-            print(k, v.shape, flush=True)
-
         # To tensor
         return {k: torch.from_numpy(v) for k, v in batch.items()}
     
