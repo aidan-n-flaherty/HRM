@@ -100,12 +100,12 @@ class PuzzleDataset(IterableDataset):
         #if self.metadata.ignore_label_id is not None:
         #    batch["labels"][batch["labels"] == self.metadata.ignore_label_id] = IGNORE_LABEL_ID
 
+        import sys
         print(len(batch.items()), flush=True, file=sys.stderr)
         for k, v in batch.items():
             print(k, v.shape, flush=True, file=sys.stderr)
         
         # Pad
-        import sys
         if batch["puzzle_identifiers"].size < self.local_batch_size:
             print("Padding!", flush=True, file=sys.stderr)
             pad_size = self.local_batch_size - batch["puzzle_identifiers"].size
