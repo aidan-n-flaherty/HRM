@@ -115,9 +115,9 @@ class PuzzleDataset(IterableDataset):
         else:
             print("Not padding!", flush=True, file=sys.stderr)
         
-        print(len(batch.items()))
+        print(len(batch.items()), flush=True)
         for k, v in batch.items():
-            print(k, v.shape)
+            print(k, v.shape, flush=True)
 
         # To tensor
         return {k: torch.from_numpy(v) for k, v in batch.items()}
