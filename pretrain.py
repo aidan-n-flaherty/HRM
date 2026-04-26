@@ -204,9 +204,7 @@ def train_batch(config: PretrainConfig, train_state: TrainState, batch: Any, glo
             train_state.carry = train_state.model.initial_carry(batch)  # type: ignore
 
     import sys
-    print("Running model, step", train_state.step, flush=True, file=sys.stderr)
     train_state.carry, loss, metrics, _, _ = train_state.model(carry=train_state.carry, batch=batch, return_keys=[])
-    print("Loss", loss, flush=True, file=sys.stderr)
     ((1 / global_batch_size) * loss).backward()
 
     if world_size > 1:
@@ -234,6 +232,9 @@ def train_batch(config: PretrainConfig, train_state: TrainState, batch: Any, glo
             count = max(reduced_metrics["count"], 1)
             reduced_metrics = {f"train/{k}": v / (global_batch_size if k.endswith("loss") else count) for k, v in reduced_metrics.items()}
             reduced_metrics["train/lr"] = lr_this_step
+
+            print("Metrics", reduced_metrics, flush=True, file=sys.stderr)
+    
             return reduced_metrics
 
 
