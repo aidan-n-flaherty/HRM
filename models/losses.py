@@ -25,8 +25,8 @@ class ContinuousACTLossHead(nn.Module):
     ) -> Tuple[Any, torch.Tensor, Dict[str, torch.Tensor], Optional[Dict[str, torch.Tensor]], torch.Tensor]:
         new_carry, outputs = self.model(**model_kwargs)
 
-        #labels = rms_norm(new_carry.current_data["labels"], variance_epsilon=1e-5)
-        labels = new_carry.current_data["labels"]
+        labels = rms_norm(new_carry.current_data["labels"], variance_epsilon=1e-5)
+        #labels = new_carry.current_data["labels"]
 
         preds = outputs["hidden_states"]
 
