@@ -75,8 +75,8 @@ class HierarchicalReasoningModel_ACTV1Block(nn.Module):
     def forward(self, cos_sin: CosSin, hidden_states: torch.Tensor) -> torch.Tensor:
         #hidden_states = rms_norm(hidden_states + self.self_attn(cos_sin=cos_sin, hidden_states=hidden_states), variance_epsilon=self.norm_eps)
         #hidden_states = rms_norm(hidden_states + self.mlp(hidden_states), variance_epsilon=self.norm_eps)
-        hidden_states = hidden_states + self.self_attn(cos_sin=cos_sin, hidden_states=hidden_states)
-        hidden_states = hidden_states + self.mlp(hidden_states)
+        hidden_states = hidden_states + self.self_attn(cos_sin=cos_sin, hidden_states=rms_norm(hidden_states))
+        hidden_states = hidden_states + self.mlp(rms_norm(hidden_states))
         return hidden_states
 
 
