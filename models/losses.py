@@ -2,6 +2,7 @@ from typing import Any, Tuple, Dict, Sequence, Optional
 import torch
 import torch.nn.functional as F
 from torch import nn
+import sys
 
 
 IGNORE_LABEL_ID = -100
@@ -30,6 +31,9 @@ class ContinuousACTLossHead(nn.Module):
         predict_mask = torch.zeros(preds.shape[1], dtype=torch.bool, device=preds.device)
         for idx in range(int(predict_mask.shape[0]/4), int(predict_mask.shape[0]*3/4)):
             predict_mask[idx] = True
+
+        for idx in range(0, 4):
+            print(idx, "norm:", torch.linalg.norm(preds[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
 
         diff = (preds[:, predict_mask] - labels[:, predict_mask].to(preds.dtype)) ** 2
         per_seq_mse = diff.mean(dim=(-1, -2))

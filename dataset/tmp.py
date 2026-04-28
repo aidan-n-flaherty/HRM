@@ -18,8 +18,8 @@ NUM_FRAMES       = 4
 class DataProcessConfig(BaseModel):
     encoded_dir: str = "../encoded_dataset"
     output_dir:  str = "data/encoded_dataset"
-    train_size:  int = 64
-    test_size:   int = 10
+    train_size:  int = 900
+    test_size:   int = 100
     num_aug:     int = 0
     seed:        int = 42
 
