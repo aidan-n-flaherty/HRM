@@ -35,12 +35,19 @@ class ContinuousACTLossHead(nn.Module):
 
         print(flush=True, file=sys.stderr)
 
-        for idx in range(0, 4):
-            print(idx, "label norm:", torch.linalg.norm(labels[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
+        #for idx in range(0, 4):
+        #    print(idx, "label norm:", torch.linalg.norm(labels[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
 
+        l = []
+        p = []
         for idx in range(0, 4):
             print(idx, "norm:", torch.linalg.norm(preds[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
-            print(idx, "diff:", torch.linalg.norm(torch.nn.functional.normalize(labels[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]) - torch.nn.functional.normalize(preds[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])), flush=True, file=sys.stderr)
+            
+            l.append(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
+            p.append(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
+        
+        print("Closer to prediction than start:", torch.linalg.norm(p[1] - p[0]) - torch.linalg.norm(p[1] - l[1]), flush=True, file=sys.stderr)
+        print("Closer to prediction than end:", torch.linalg.norm(p[3] - p[2]) - torch.linalg.norm(p[2] - l[2]), flush=True, file=sys.stderr)
 
         diff = (preds[:, predict_mask] - labels[:, predict_mask].to(preds.dtype)) ** 2
         per_seq_mse = diff.mean(dim=(-1, -2))
