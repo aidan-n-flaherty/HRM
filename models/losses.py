@@ -46,7 +46,8 @@ class ContinuousACTLossHead(nn.Module):
         per_seq_mse = diff.mean(dim=(-1, -2))
 
         with torch.no_grad():
-            seq_is_correct = per_seq_mse < 1e-3
+            threshold = torch.quantile(per_seq_mse, 0.25)
+            seq_is_correct = per_seq_mse <= threshold
             valid_metrics = new_carry.halted
 
         metrics = {
