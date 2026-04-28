@@ -3,6 +3,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 import sys
+from models.layers import rms_norm
 
 
 IGNORE_LABEL_ID = -100
@@ -24,7 +25,7 @@ class ContinuousACTLossHead(nn.Module):
     ) -> Tuple[Any, torch.Tensor, Dict[str, torch.Tensor], Optional[Dict[str, torch.Tensor]], torch.Tensor]:
         new_carry, outputs = self.model(**model_kwargs)
 
-        labels = new_carry.current_data["labels"]
+        labels = rms_norm(new_carry.current_data["labels"])
 
         preds = outputs["hidden_states"]
 
