@@ -36,14 +36,17 @@ class ContinuousACTLossHead(nn.Module):
 
         print(flush=True, file=sys.stderr)
 
-        #for idx in range(0, 4):
-        #    print(idx, "label norm:", torch.linalg.norm(labels[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
+        for idx in range(0, 4):
+            print(idx, "label norm:", torch.linalg.norm(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
 
         l = []
         p = []
         for idx in range(0, 4):
-            print(idx, "norm:", torch.linalg.norm(preds[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
+            print(idx, "norm:", torch.linalg.norm(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
             
+            print("prediction", preds[0])
+            print("label", labels[0])
+
             l.append(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
             p.append(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
         
