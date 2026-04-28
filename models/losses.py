@@ -40,7 +40,7 @@ class ContinuousACTLossHead(nn.Module):
 
         for idx in range(0, 4):
             print(idx, "norm:", torch.linalg.norm(preds[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
-            print(idx, "diff:", torch.linalg.norm(labels[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)] - preds[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]))
+            print(idx, "diff:", torch.linalg.norm(labels[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)] - preds[0][int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
 
         diff = (preds[:, predict_mask] - labels[:, predict_mask].to(preds.dtype)) ** 2
         per_seq_mse = diff.mean(dim=(-1, -2))
