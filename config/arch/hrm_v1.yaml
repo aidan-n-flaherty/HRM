@@ -17,4 +17,4 @@ expansion: 4
 
 puzzle_emb_ndim: ${.hidden_size}
 
-pos_encodings: learned
+pos_encodings: rope
