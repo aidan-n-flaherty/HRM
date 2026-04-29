@@ -103,7 +103,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
         self.embed_scale = math.sqrt(self.config.hidden_size)
         embed_init_std = 1.0 / self.embed_scale
 
-        self.lm_head = torch.nn.Linear(self.config.hidden_size, self.config.hidden_size)
+        self.lm_head = CastedLinear(self.config.hidden_size, self.config.hidden_size, bias=True)
         self.q_head = CastedLinear(self.config.hidden_size, 2, bias=True)
 
         self.puzzle_emb_len = -(self.config.puzzle_emb_ndim // -self.config.hidden_size)
@@ -183,8 +183,8 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
         z_H = self.H_level(z_H, z_L, **seq_info)
 
         new_carry = HierarchicalReasoningModel_ACTV1InnerCarry(z_H=z_H.detach(), z_L=z_L.detach())
-        #output = self.lm_head(z_H.float())[:, self.puzzle_emb_len:].to(z_H.dtype)
-        output = z_H[:, self.puzzle_emb_len:]
+        output = self.lm_head(z_H)[:, self.puzzle_emb_len:]
+        #output = z_H[:, self.puzzle_emb_len:]
 
         q_logits = self.q_head(z_H[:, 0]).to(torch.float32)
         

@@ -36,13 +36,13 @@ class ContinuousACTLossHead(nn.Module):
 
         print(flush=True, file=sys.stderr)
 
-        for idx in range(0, 4):
-            print(idx, "label norm:", torch.linalg.norm(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
+        #for idx in range(0, 4):
+        #    print(idx, "label norm:", torch.linalg.norm(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
 
         l = []
         p = []
         for idx in range(0, 4):
-            print(idx, "norm:", torch.linalg.norm(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
+            #print(idx, "norm:", torch.linalg.norm(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)]), flush=True, file=sys.stderr)
             
             print("prediction", preds[0, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)], flush=True, file=sys.stderr)
             print("label", labels[0, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)], flush=True, file=sys.stderr)
@@ -50,8 +50,10 @@ class ContinuousACTLossHead(nn.Module):
             l.append(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
             p.append(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
         
-        print("d(pred - start):", torch.linalg.norm(p[1] - l[0]), "d(pred - target):", torch.linalg.norm(p[1] - l[1]), flush=True, file=sys.stderr)
-        print("d(pred - end):", torch.linalg.norm(p[3] - l[2]), "d(pred - target):", torch.linalg.norm(p[2] - l[2]), flush=True, file=sys.stderr)
+        print("d(pred1 - start):", torch.linalg.norm(p[1] - l[0]), "d(pred1 - target):", torch.linalg.norm(p[1] - l[1]), flush=True, file=sys.stderr)
+        print("d(pred2 - end):", torch.linalg.norm(p[2] - l[3]), "d(pred2 - target):", torch.linalg.norm(p[2] - l[2]), flush=True, file=sys.stderr)
+        print("d(pred0 - start):", torch.linalg.norm(p[0] - l[0]), "d(pred3 - end):", torch.linalg.norm(p[3] - l[3]), flush=True, file=sys.stderr)
+        print("d(pred1 - end):", torch.linalg.norm(p[1] - l[3]), "d(pred2 - start):", torch.linalg.norm(p[2] - l[0]), flush=True, file=sys.stderr)
 
         diff = (preds[:, predict_mask] - labels[:, predict_mask].to(preds.dtype)) ** 2
         per_seq_mse = diff.mean(dim=(-1, -2))
