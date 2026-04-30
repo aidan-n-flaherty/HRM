@@ -103,7 +103,8 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
         self.embed_scale = math.sqrt(self.config.hidden_size)
         embed_init_std = 1.0 / self.embed_scale
 
-        self.lm_head = CastedLinear(self.config.hidden_size, self.config.hidden_size, bias=True)
+        self.inp_head = CastedLinear(self.config.dim, self.config.hidden_size, bias=True)
+        self.lm_head = CastedLinear(self.config.hidden_size, self.config.dim, bias=True)
         self.q_head = CastedLinear(self.config.hidden_size, 2, bias=True)
 
         self.puzzle_emb_len = -(self.config.puzzle_emb_ndim // -self.config.hidden_size)
@@ -131,7 +132,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
             self.q_head.bias.fill_(-5)
 
     def _input_embeddings(self, input: torch.Tensor, puzzle_identifiers: torch.Tensor):
-        embedding = input.to(self.forward_dtype)
+        embedding = self.inp_head(input.to(self.forward_dtype))
 
         if self.config.puzzle_emb_ndim > 0:
             puzzle_embedding = self.puzzle_emb(puzzle_identifiers)
@@ -142,7 +143,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
 
             embedding = torch.cat((puzzle_embedding.view(-1, self.puzzle_emb_len, self.config.hidden_size), embedding), dim=-2)
 
-        if self.config.pos_encodings == "learned":
+        if self.config.pos_encodings == "rope":
             embedding = 0.707106781 * (embedding + self.embed_pos.embedding_weight.to(self.forward_dtype))
 
         return self.embed_scale * embedding
