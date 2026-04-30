@@ -28,7 +28,7 @@ class ContinuousACTLossHead(nn.Module):
         labels = rms_norm(new_carry.current_data["labels"], variance_epsilon=1e-5)
         #labels = new_carry.current_data["labels"]
 
-        preds = outputs["hidden_states"]
+        preds = rms_norm(outputs["hidden_states"], variance_epsilon=1e-5)
 
         predict_mask = torch.zeros(preds.shape[1], dtype=torch.bool, device=preds.device)
         for idx in range(int(predict_mask.shape[0]/4), int(predict_mask.shape[0]*3/4)):
@@ -54,6 +54,7 @@ class ContinuousACTLossHead(nn.Module):
         print("d(pred2 - end):", torch.linalg.norm(p[2] - l[3]), "d(pred2 - target):", torch.linalg.norm(p[2] - l[2]), flush=True, file=sys.stderr)
         print("d(pred0 - start):", torch.linalg.norm(p[0] - l[0]), "d(pred3 - end):", torch.linalg.norm(p[3] - l[3]), flush=True, file=sys.stderr)
         print("d(pred1 - end):", torch.linalg.norm(p[1] - l[3]), "d(pred2 - start):", torch.linalg.norm(p[2] - l[0]), flush=True, file=sys.stderr)
+        print("d(start - target1):", torch.linalg.norm(l[1] - l[0]), "d(end - target2):", torch.linalg.norm(l[3] - l[2]), flush=True, file=sys.stderr)
 
         diff = (preds[:, predict_mask] - labels[:, predict_mask].to(preds.dtype)) ** 2
         per_seq_mse = diff.mean(dim=(-1, -2))
