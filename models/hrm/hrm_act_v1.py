@@ -143,7 +143,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
 
             embedding = torch.cat((puzzle_embedding.view(-1, self.puzzle_emb_len, self.config.hidden_size), embedding), dim=-2)
 
-        if self.config.pos_encodings == "rope":
+        if self.config.pos_encodings == "learned":
             embedding = 0.707106781 * (embedding + self.embed_pos.embedding_weight.to(self.forward_dtype))
 
         return self.embed_scale * embedding
