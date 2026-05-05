@@ -173,7 +173,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
             for _H_step in range(self.config.H_cycles):
                 for _L_step in range(self.config.L_cycles):
                     if not ((_H_step == self.config.H_cycles - 1) and (_L_step == self.config.L_cycles - 1)):
-                        z_L = self.L_level(z_L, z_H + input_embeddings, **seq_info)
+                        z_L = self.L_level(z_L, z_H + (torch.stack([input_embeddings[:, :int(input_embeddings.shape[1]/4)], input_embeddings[:, :int(input_embeddings.shape[1]/4)], input_embeddings[:, int(input_embeddings.shape[1]*3/4):], input_embeddings[:, int(input_embeddings.shape[1]*3/4):]], 1) if _H_step == 0 and _L_step == 0 else input_embeddings), **seq_info)
 
                 if not (_H_step == self.config.H_cycles - 1):
                     z_H = self.H_level(z_H, z_L, **seq_info)
