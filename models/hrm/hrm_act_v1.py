@@ -166,6 +166,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
         )
 
         input_embeddings = self._input_embeddings(batch["inputs"], batch["puzzle_identifiers"])
+        input_embeddings_start = self._input_embeddings(torch.cat([batch["inputs"][:, :256], batch["inputs"][:, :256], batch["inputs"][:, 768:], batch["inputs"][:, 768:]], 1), batch["puzzle_identifiers"])
 
         with torch.no_grad():
             z_H, z_L = carry.z_H, carry.z_L
@@ -174,8 +175,7 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
                 for _L_step in range(self.config.L_cycles):
                     if not ((_H_step == self.config.H_cycles - 1) and (_L_step == self.config.L_cycles - 1)):
                         import sys
-                        print(input_embeddings[:, :256].shape, input_embeddings[:, :256].shape, input_embeddings[:, 768:].shape, input_embeddings[:, 768:].shape, flush=True, file=sys.stderr)
-                        z_L = self.L_level(z_L, z_H + (torch.cat([input_embeddings[:, :256], input_embeddings[:, :256], input_embeddings[:, 768:], input_embeddings[:, 768:]], 1) if _H_step == 0 and _L_step == 0 else input_embeddings), **seq_info)
+                        z_L = self.L_level(z_L, z_H + (input_embeddings_start if _H_step == 0 and _L_step == 0 else input_embeddings), **seq_info)
 
                 if not (_H_step == self.config.H_cycles - 1):
                     z_H = self.H_level(z_H, z_L, **seq_info)
