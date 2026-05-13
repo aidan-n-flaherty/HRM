@@ -174,7 +174,6 @@ class HierarchicalReasoningModel_ACTV1_Inner(nn.Module):
             for _H_step in range(self.config.H_cycles):
                 for _L_step in range(self.config.L_cycles):
                     if not ((_H_step == self.config.H_cycles - 1) and (_L_step == self.config.L_cycles - 1)):
-                        import sys
                         z_L = self.L_level(z_L, z_H + (input_embeddings_start if _H_step == 0 and _L_step == 0 else input_embeddings), **seq_info)
 
                 if not (_H_step == self.config.H_cycles - 1):

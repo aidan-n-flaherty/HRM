@@ -14,7 +14,7 @@ data_path: data/arc-aug-1000
 global_batch_size: 32
 
 epochs: 10000
-eval_interval: 10000
+eval_interval: 20
 checkpoint_every_eval: True
 
 lr: 1e-5
