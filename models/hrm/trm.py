@@ -35,7 +35,6 @@ class TinyRecursiveReasoningModel_ACTV1Config(BaseModel):
     dim: int
     puzzle_emb_ndim: int = 0
     num_puzzle_identifiers: int
-    vocab_size: int  # kept for any downstream compatibility, not used in the model itself
 
     H_cycles: int
     L_cycles: int
