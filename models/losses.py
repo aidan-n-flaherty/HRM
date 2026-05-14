@@ -50,17 +50,20 @@ class ContinuousACTLossHead(nn.Module):
             l.append(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
             p.append(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
         
+        def mse(a, b):
+            return ((a - b.to(a.dtype)) ** 2).mean(dim=(-1, -2))
+
         mean1 = torch.mean(l[1], dim=1, keepdim=True)
         mean2 = torch.mean(l[2], dim=1, keepdim=True)
 
-        print("d(average1 - target1):", torch.linalg.norm(l[1] - mean1), flush=True, file=sys.stderr)
-        print("d(average2 - target2):", torch.linalg.norm(l[2] - mean2), flush=True, file=sys.stderr)
+        print("d(average1 - target1):", mse(l[1], mean1.expand_as(l[1])).mean().item(), flush=True, file=sys.stderr)
+        print("d(average2 - target2):", mse(l[2], mean2.expand_as(l[2])).mean().item(), flush=True, file=sys.stderr)
 
-        print("d(pred1 - start):", torch.linalg.norm(p[1] - l[0]), "d(pred1 - target):", torch.linalg.norm(p[1] - l[1]), flush=True, file=sys.stderr)
-        print("d(pred2 - end):", torch.linalg.norm(p[2] - l[3]), "d(pred2 - target):", torch.linalg.norm(p[2] - l[2]), flush=True, file=sys.stderr)
-        print("d(pred0 - start):", torch.linalg.norm(p[0] - l[0]), "d(pred3 - end):", torch.linalg.norm(p[3] - l[3]), flush=True, file=sys.stderr)
-        print("d(pred1 - end):", torch.linalg.norm(p[1] - l[3]), "d(pred2 - start):", torch.linalg.norm(p[2] - l[0]), flush=True, file=sys.stderr)
-        print("d(start - target1):", torch.linalg.norm(l[1] - l[0]), "d(end - target2):", torch.linalg.norm(l[3] - l[2]), flush=True, file=sys.stderr)
+        print("d(pred1 - start):",  mse(p[1], l[0]).mean().item(), "d(pred1 - target):", mse(p[1], l[1]).mean().item(), flush=True, file=sys.stderr)
+        print("d(pred2 - end):",    mse(p[2], l[3]).mean().item(), "d(pred2 - target):", mse(p[2], l[2]).mean().item(), flush=True, file=sys.stderr)
+        print("d(pred0 - start):",  mse(p[0], l[0]).mean().item(), "d(pred3 - end):",    mse(p[3], l[3]).mean().item(), flush=True, file=sys.stderr)
+        print("d(pred1 - end):",    mse(p[1], l[3]).mean().item(), "d(pred2 - start):",  mse(p[2], l[0]).mean().item(), flush=True, file=sys.stderr)
+        print("d(start - target1):", mse(l[0], l[1]).mean().item(), "d(end - target2):", mse(l[3], l[2]).mean().item(), flush=True, file=sys.stderr)
 
         diff = (preds[:, predict_mask] - labels[:, predict_mask].to(preds.dtype)) ** 2
         per_seq_mse = diff.mean(dim=(-1, -2))
