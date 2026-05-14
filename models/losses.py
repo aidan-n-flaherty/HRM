@@ -47,8 +47,8 @@ class ContinuousACTLossHead(nn.Module):
             print("prediction", preds[0, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)], flush=True, file=sys.stderr)
             print("label", labels[0, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)], flush=True, file=sys.stderr)
 
-            l.append(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
-            p.append(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
+            l.append(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)].float())
+            p.append(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)].float())
         
         def mse(a, b):
             return ((a - b.to(a.dtype)) ** 2).mean(dim=(-1, -2))
