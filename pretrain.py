@@ -101,7 +101,7 @@ def create_model(config: PretrainConfig, train_metadata: PuzzleDatasetMetadata, 
     from models.hrm.trm import TinyRecursiveReasoningModel_ACTV1
     from models.losses import ContinuousACTLossHead
     #model_cls = load_model_class(config.arch.name)
-    model_cls = TinyRecursiveReasoningModel_ACTV1
+    model_cls = HierarchicalReasoningModel_ACTV1
     loss_head_cls = ContinuousACTLossHead
 
     with torch.device("cuda"):

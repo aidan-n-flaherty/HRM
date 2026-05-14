@@ -5,10 +5,10 @@ loss:
 halt_exploration_prob: 0.1
 halt_max_steps: 16
 
-H_cycles: 3
-L_cycles: 6
+H_cycles: 2
+L_cycles: 4
 
-H_layers: 0
+H_layers: 4
 L_layers: 4
 
 hidden_size: 1408
