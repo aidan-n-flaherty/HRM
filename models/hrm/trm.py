@@ -213,7 +213,7 @@ class TinyRecursiveReasoningModel_ACTV1_Inner(nn.Module):
                 for _L_step in range(self.config.L_cycles):
                     # Skip the very last (H, L) pair — that one runs with grad below
                     if not ((_H_step == self.config.H_cycles - 1) and (_L_step == self.config.L_cycles - 1)):
-                        is_first = (_H_step == 0 and _L_step == 0)
+                        is_first = (_H_step == 0 and _L_step == 0) and False
                         z_L = self.L_level(
                             z_L,
                             z_H + (input_embeddings_start if is_first else input_embeddings),
