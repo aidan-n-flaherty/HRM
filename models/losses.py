@@ -50,7 +50,12 @@ class ContinuousACTLossHead(nn.Module):
             l.append(labels[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
             p.append(preds[:, int(idx * predict_mask.shape[0]/4):int((idx + 1) * predict_mask.shape[0]/4)])
         
-        print("d(average):", torch.linalg.norm(labels[:, int(1 * predict_mask.shape[0]/4):int((3) * predict_mask.shape[0]/4)] - torch.mean(labels[:, int(1 * predict_mask.shape[0]/4):int((3) * predict_mask.shape[0]/4)], 2, True)), flush=True, file=sys.stderr)
+        mean1 = torch.mean(l[1], dim=1, keepdim=True)
+        mean2 = torch.mean(l[2], dim=1, keepdim=True)
+
+        print("d(average1 - target1):", torch.linalg.norm(l[1] - mean1), flush=True, file=sys.stderr)
+        print("d(average2 - target2):", torch.linalg.norm(l[2] - mean2), flush=True, file=sys.stderr)
+
         print("d(pred1 - start):", torch.linalg.norm(p[1] - l[0]), "d(pred1 - target):", torch.linalg.norm(p[1] - l[1]), flush=True, file=sys.stderr)
         print("d(pred2 - end):", torch.linalg.norm(p[2] - l[3]), "d(pred2 - target):", torch.linalg.norm(p[2] - l[2]), flush=True, file=sys.stderr)
         print("d(pred0 - start):", torch.linalg.norm(p[0] - l[0]), "d(pred3 - end):", torch.linalg.norm(p[3] - l[3]), flush=True, file=sys.stderr)
